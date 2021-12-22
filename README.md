@@ -11,4 +11,8 @@ Support 1-player gaming & 2-players gaming (Thx to GermanCoding's lib again)
 
 ## Play
 1. Download the whole repo
-2. Run `bnr.bat` to automaticly complile & run
+2. Run `bnr.bat` to automaticly compile & run
+
+## Notice
+1. .class files are stored in `build/` folder
+2. After compiling, you can get `OutbreakAlef.jar`, which you can run it portable with `run.bat`
