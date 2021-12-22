@@ -39,8 +39,7 @@ public final class Wall extends AbstractEntity {
     // Constructor
     public Wall(Vec2 pos, int hp, WallType tp) {
         // Super
-        super(Type.Wall);
-        id = accumulator++;
+        super(Type.Wall, accumulator++);
         rect = Rect.getInstance(pos, tp.sizeH);
         health = hp;
         // This

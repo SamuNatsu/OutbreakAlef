@@ -10,25 +10,20 @@ import com.Mouse;
 
 public class Pack {
     // Static flags
-    static public final byte NOP = 0;   // No operation
-    static public final byte STT = 1;   // Start game
-    static public final byte RSD = 2;   // Random seed
-    static public final byte NXF = 3;   // Next frame
-    static public final byte IMP = 4;   // Impulse
-    static public final byte GMB = 5;   // Generate mob
-    static public final byte GBL = 6;   // Generate bullet
-    static public final byte ACK = 7;   // Acknowledged
-    static public final byte ASC = 8;   // Add score
-    static public final byte CUR = 9;   // Cure player
-    static public final byte GHM = 10;  // Generate HP medic
-    static public final byte SWG = 11;  // Switch gun
-    static public final byte MPS = 12;  // Mouse position & state
+    static public final byte STT = 0;   // Start game
+    static public final byte RSD = 1;   // Random seed
+    static public final byte NXF = 2;   // Next frame
+    static public final byte IMP = 3;   // Impulse
+    static public final byte GMB = 4;   // Generate mob
+    static public final byte GBL = 5;   // Generate bullet
+    static public final byte ACK = 6;   // Acknowledged
+    static public final byte ASC = 7;   // Add score
+    static public final byte CUR = 8;   // Cure player
+    static public final byte GHM = 9;  // Generate HP medic
+    static public final byte SWG = 10;  // Switch gun
+    static public final byte MPS = 11;  // Mouse position & state
 
     // Pack maker
-    static public byte[] getNOP() {
-        byte[] tmp = {NOP};
-        return tmp;
-    }
     static public byte[] getSST() {
         byte[] tmp = {STT};
         return tmp;
@@ -93,7 +88,7 @@ public class Pack {
         byte[] tmp = {ACK};
         return tmp;
     }
-    static public byte[] getASC(long sc) {
+    static public byte[] getASC(int sc) {
         ByteArrayOutputStream b = new ByteArrayOutputStream(3);
         DataOutputStream out = new DataOutputStream(b);
         try {

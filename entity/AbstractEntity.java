@@ -24,7 +24,7 @@ public abstract class AbstractEntity {
     // Entity type
     public final Type type;
     // Entity id
-    public long id;
+    public final long id;
     // Entity hitbox
     public Rect rect;
     // Entity health & damage
@@ -34,13 +34,15 @@ public abstract class AbstractEntity {
     public Vec2 velocity = Vec2.getInstance();
 
     // Constructor
-    public AbstractEntity(Type tp) {
+    public AbstractEntity(Type tp, long i) {
         // Set type
         type = tp;
+        // Set ID
+        id = i;
     }
     // Entity move
     public void move(double time) {
-        // Position transition
+        // Position transfer
         rect.position = rect.position.add(velocity.mul(time));
         // Damping
         if (velocity.mul(damping).length() > minVelo)

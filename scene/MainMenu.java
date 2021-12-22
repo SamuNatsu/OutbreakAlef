@@ -24,7 +24,7 @@ public final class MainMenu extends AbstractScene {
             addActionListener((ActionEvent e)->callback.run());
         }
     }
-    // Static
+    // Static data
     static private final MButton soloGameB = 
         new MButton(
             Rect.getInstance(230, 400, 500, 40),
@@ -32,7 +32,7 @@ public final class MainMenu extends AbstractScene {
             ()-> {
                 Shared.enableNetwork = false;
                 EntityPool.nowPlayer = EntityPool.p1;
-                SceneManager.transition("Game");
+                SceneManager.transfer("Game");
             });
     static private final MButton compGameB = 
         new MButton(
@@ -40,7 +40,7 @@ public final class MainMenu extends AbstractScene {
             "Competition Mode",
             ()-> {
                 Shared.enableNetwork = true;
-                SceneManager.transition("CompMenu");
+                SceneManager.transfer("CompMenu");
             });
     static private final MButton exitB = 
         new MButton(
@@ -92,10 +92,13 @@ public final class MainMenu extends AbstractScene {
     public void event() {}
     @Override
     public void draw(Graphics2D g2d) {
+        // Draw background
         WorldMap.drawMap(g2d);
         g2d.setColor(Shared.darkLayer);
         g2d.fillRect(0, 0, Application.size.intX(), Application.size.intY());
+        // Draw main
         Shared.titleA.draw(g2d);
+        // Draw footer
         g2d.setFont(Shared.MSYH_B15);
         g2d.setColor(Color.WHITE);
         g2d.drawString("Made by Samunatsu Rainiar", 730, 710);

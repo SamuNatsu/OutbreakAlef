@@ -3,9 +3,9 @@ package com;
 import auxiliary.*;
 
 public final class Camera {
-    // Static
+    // Static data
     static private final Vec2 staticOffset = Application.size.div(2);
-    // Top-left offset of camera
+    // Top-left offset
     static private final Vec2 topLeftOffset = Application.size.div(-2);
 
     // Look at global position

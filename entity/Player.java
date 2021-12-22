@@ -22,12 +22,14 @@ public final class Player extends AbstractEntity {
     // Gun type
     public Gun gunType = Gun.AR;
     // Last shoot time & score
-    public long lastShootTime = System.currentTimeMillis(), score = 0;
+    public long lastShootTime = System.currentTimeMillis();
+    public int score = 0;
     // If gun released
     public boolean gunRelease = true;
     // Player state
     public boolean moving = false;
     public long injuring = 0;
+    public int life = 0;
     // Player texture
     public final Image[] texture = new Image[2];
     public final Sprite[] sprite = new Sprite[2];
@@ -36,8 +38,7 @@ public final class Player extends AbstractEntity {
     // Constructor
     public Player(Image t1, Image t2, Sprite sp1, Sprite sp2) {
         // Super
-        super(Type.Player);
-        id = accumulator++;
+        super(Type.Player, accumulator++);
         rect = plSize.clone();
         maxVelo = 15;
         damping = 0.8;
@@ -59,6 +60,7 @@ public final class Player extends AbstractEntity {
         score = 0;
         health = 100;
         gunRelease = true;
+        life = 3;
     }
     // Switch gun
     public void switchGun(Gun tp) {
@@ -111,7 +113,7 @@ public final class Player extends AbstractEntity {
         EntityPool.particle.add(new FloatWord(rect.position, fwv, "+" + hp, cureColor));
     }
     // Add score
-    public void addScore(long sc) {
+    public void addScore(int sc) {
         // Network
         if (Shared.enableNetwork && EntityPool.nowPlayer == this)
             SvrClt.socket.send(Pack.getASC(sc));
@@ -119,7 +121,7 @@ public final class Player extends AbstractEntity {
         if (EntityPool.nowPlayer == this)
             addScoreN(sc);
     }
-    public void addScoreN(long sc) {
+    public void addScoreN(int sc) {
         score += sc;
         EntityPool.particle.add(new FloatWord(
             rect.position, 
@@ -206,6 +208,10 @@ public final class Player extends AbstractEntity {
         score *= 0.8;
         health = 100;
         EntityPool.particle.add(new Cloud(rect.position, 5, 30));
+        // Update life
+        --life;
+        if (life == 0) 
+            Shared.gameSet = true;
     }
     @Override
     public void onMove(double time) {
@@ -248,7 +254,6 @@ public final class Player extends AbstractEntity {
     }
     @Override
     public void draw(Graphics2D g2d) {
-            // Todo: Draw player
         Vec2 tmp = Camera.trans2LPos(rect.position);
         if (moving) {
             ani.setSprite(System.currentTimeMillis() - injuring > 100 ? sprite[0] : sprite[1]);

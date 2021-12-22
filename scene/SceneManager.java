@@ -21,8 +21,8 @@ public final class SceneManager {
     static public void set(String name) {
         nowScene = pool.containsKey(name) ? name : "";
     }
-    // Transition
-    static synchronized public void transition(String name) {
+    // Transfer
+    static synchronized public void transfer(String name) {
         if (nowScene.compareTo("") != 0)
             pool.get(nowScene).quit();
         nowScene = pool.containsKey(name) ? name : "";

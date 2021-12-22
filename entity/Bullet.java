@@ -10,7 +10,7 @@ import java.awt.*;
 public final class Bullet extends AbstractEntity {
     // Entity ID accumulator
     static private long accumulator = 0;
-    // Static
+    // Static data
     static private final Vec2 bulletSize = Vec2.getInstance(5, 5);
     // Source position
     public final Vec2 sourcePos;
@@ -22,8 +22,7 @@ public final class Bullet extends AbstractEntity {
     // Constructor
     public Bullet(Vec2 pos, Vec2 v, int dmg, double rng, Player fr) {
         // Super
-        super(Type.Bullet);
-        id = accumulator++;
+        super(Type.Bullet, accumulator++);
         rect = Rect.getInstance(pos.add(v.resize(40)), bulletSize);
         damage = dmg;
         velocity = Utils.spreadDirection(v, Math.toRadians(-1.5), Math.toRadians(1.5));
@@ -31,20 +30,19 @@ public final class Bullet extends AbstractEntity {
         sourcePos = pos.add(v.resize(40));
         shotFrom = fr;
         range = rng;
-        // Network
+        // Synchronize
         if (Shared.enableNetwork && EntityPool.nowPlayer == fr)
             SvrClt.socket.send(Pack.getGBL(pos, velocity, dmg, rng));
     }
     public Bullet(Vec2 pos, Vec2 v, int dmg, double rng, byte pl) {
         // Super
-        super(Type.Bullet);
-        id = accumulator++;
+        super(Type.Bullet, accumulator++);
         rect = Rect.getInstance(pos.add(v.resize(40)), bulletSize);
         damage = dmg;
         velocity = v.clone();
         // This
         sourcePos = pos.add(v.resize(40));
-        shotFrom = pl == 0 ? EntityPool.p1 : EntityPool.p2;
+        shotFrom = (pl == 0 ? EntityPool.p1 : EntityPool.p2);
         range = rng;
     }
     // Override abstract methods

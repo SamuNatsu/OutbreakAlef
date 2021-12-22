@@ -8,15 +8,14 @@ import java.awt.*;
 public final class HPMedic extends AbstractEntity {
     // Entity ID accumulator
     static private long accumulator = 0;
-    // Static 
+    // Static data
     static private final Vec2 medicSize = Vec2.getInstance(40, 40);
     // Animate time counter
     private double totalTime = 0;
 
     // Constructor
     public HPMedic(Vec2 pos) {
-        super(Type.Loot);
-        id = accumulator++;
+        super(Type.Loot, accumulator++);
         rect = Rect.getInstance(pos, medicSize);
     }
     // Override abstract methods

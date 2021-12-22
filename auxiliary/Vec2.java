@@ -1,13 +1,14 @@
 package auxiliary;
 
 public final class Vec2 implements Cloneable {
-    // Static
+    // Static factory base
     static private final Vec2 base = new Vec2();
     // Data
     public double x = 0, y = 0;
 
     // Constructor
     private Vec2() {}
+    // Factories
     static synchronized public Vec2 getInstance() {
         return getInstance(0, 0);
     }
@@ -28,7 +29,7 @@ public final class Vec2 implements Cloneable {
     }
     // Reset
     public void reset() {
-        x = y = 0;
+        set(0, 0);
     }
     // Set data
     public void set(double tx, double ty) {

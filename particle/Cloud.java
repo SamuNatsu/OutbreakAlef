@@ -8,6 +8,8 @@ import java.awt.*;
 public final class Cloud extends AbstractParticle {
     // Static
     static private final Vec2 aniSize = Vec2.getInstance(90, 90);
+    // Flag
+    public boolean stop = false;
     // Animate
     private final Animate[] ani;
 
@@ -22,6 +24,7 @@ public final class Cloud extends AbstractParticle {
     @Override
     public void draw(Graphics2D g2d) {
         if (ani[0].stop) {
+            stop = true;
             die();
             return;
         }

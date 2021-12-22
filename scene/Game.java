@@ -21,14 +21,15 @@ public final class Game extends AbstractScene {
         Utils.genSeed();
         Keyboard.reset();
         Mouse.reset();
-        // Network
+        Shared.gameSet = false;
+        // Synchronize
         SvrClt.init();
         SvrClt.syncRandom();
         WorldMap.generateMapImage();
     }
     @Override
     public void event() {
-        // Network
+        // Synchronize
         if (!SvrClt.checkConnection())
             return;
         SvrClt.updateFlow();
@@ -37,6 +38,9 @@ public final class Game extends AbstractScene {
             return;
         // Frame accumulate
         ++SvrClt.frame;
+        // Check game set
+        if (Shared.gameSet)
+            SceneManager.transfer("End");
         // Entity update
         EntityPool.move(World.timeSlice);
         EntityPool.collide();
@@ -54,29 +58,30 @@ public final class Game extends AbstractScene {
                 }
                 lstSum = System.currentTimeMillis();
             }
-        // Back to menu
+        // Escape
         if (Keyboard.isPressed(KeyEvent.VK_ESCAPE)) {
-            SceneManager.transition("Menu");
-            return;
+            Shared.gameSet = true;
+            if (Shared.enableNetwork)
+                SvrClt.socket.send(Pack.getSST());
         }
         // Player event
         EntityPool.nowPlayer.onEvent();
         // Gadgets event
         MediKit.onEvent();
-        // Network
+        // Synchronize
         SvrClt.syncPack();
     }
     @Override
     public void draw(Graphics2D g2d) {
-        // Paint map
+        // Draw map
         WorldMap.drawMap(g2d);
-        // Paint entities
+        // Draw entities
         EntityPool.draw(g2d);
-        // Paint GUI
+        // Draw GUI
         drawGUI(g2d);
-        // Paint mini maprun
+        // Draw mini map
         WorldMap.drawMiniMap(g2d);
-        // Debug info
+        // Draw debug info
         drawDebug(g2d);
     }
     // Reset world
@@ -112,16 +117,21 @@ public final class Game extends AbstractScene {
             else 
                 g2d.drawString("Opponent: " + EntityPool.p1.score, 30, 170);
         }
+        // Draw life
+        for (int i = 0, j = Application.size.intX() - 140; i < EntityPool.nowPlayer.life; ++i, j += 40)
+            g2d.drawImage(Shared.heartT, j, 120, null);
+        // Draw gadgets
+        MediKit.draw(g2d);
+        // Draw footer
         g2d.setFont(Shared.MSYH_B15);
         g2d.setColor(Color.WHITE);
         g2d.drawString("Made by Samunatsu Rainiar", 730, 710);
-        // Draw gadgets
-        MediKit.draw(g2d);
     }
     // Draw debug info
     public void drawDebug(Graphics2D g2d) {
         // Draw hitbox
-            // EntityPool.drawHitbox(g2d);
+        if (Shared.debugMode)
+            EntityPool.drawHitbox(g2d);
         // Draw info list
         g2d.setFont(Shared.MSYH_B15);
         g2d.setColor(Color.BLACK);

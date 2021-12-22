@@ -1,13 +1,14 @@
 package auxiliary;
 
 public final class Rect implements Cloneable {
-    // Static
+    // Static factory base
     static private final Rect base = new Rect();
     // Position & size
     public Vec2 position = Vec2.getInstance(), size = Vec2.getInstance();
 
     // Constructor
     private Rect() {}
+    // Factories
     static synchronized public Rect getInstance() {
         return getInstance(0, 0, 0, 0);
     }
@@ -31,6 +32,10 @@ public final class Rect implements Cloneable {
             e.printStackTrace();
             return null;
         }
+    }
+    // Reset
+    public void reset() {
+        set(0, 0, 0, 0);
     }
     // Set data
     public void set(Vec2 pos, Vec2 sz) {

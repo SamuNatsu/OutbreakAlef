@@ -17,9 +17,10 @@ final class MTextArea extends JTextArea {
 }
 
 public final class CltMenu extends AbstractScene {
-    // Static 
+    // Static properties
     static private boolean start = false, connectFlag = false;
     static private String msg = "";
+    // Static data
     static private final MTextArea ipT = new MTextArea();
     static private final MainMenu.MButton connB = 
         new MainMenu.MButton(
@@ -43,7 +44,7 @@ public final class CltMenu extends AbstractScene {
         new MainMenu.MButton(
             Rect.getInstance(230, 560, 500, 40),
             "Back",
-            ()->SceneManager.transition("CompMenu"));
+            ()->SceneManager.transfer("CompMenu"));
 
     // Override abstract methods
     @Override
@@ -84,7 +85,7 @@ public final class CltMenu extends AbstractScene {
                 while (Shared.client.hasMessage())
                     if (Shared.client.get()[0] == Pack.STT) {
                         EntityPool.nowPlayer = EntityPool.p2;
-                        SceneManager.transition("Game");
+                        SceneManager.transfer("Game");
                         return;
                     }
             }
@@ -99,15 +100,18 @@ public final class CltMenu extends AbstractScene {
     }
     @Override
     public void draw(Graphics2D g2d) {
+        // Draw background
         WorldMap.drawMap(g2d);
         g2d.setColor(Shared.darkLayer);
         g2d.fillRect(0, 0, Application.size.intX(), Application.size.intY());
+        // Draw main
         Shared.titleA.draw(g2d);
         g2d.setColor(Color.WHITE);
         g2d.setFont(Shared.MSYH_B15);
         g2d.drawString("Input remote server IP & port:", 230, 390);
         g2d.setColor(Color.RED);
         g2d.drawString(msg, 230, 360);
+        // Draw footer
         g2d.setFont(Shared.MSYH_B15);
         g2d.setColor(Color.WHITE);
         g2d.drawString("Made by Samunatsu Rainiar", 730, 710);

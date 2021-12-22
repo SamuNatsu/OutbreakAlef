@@ -12,7 +12,7 @@ import java.awt.*;
 public final class Mob extends AbstractEntity {
     // Entity ID accumulator
     static private long accumulator = 0;
-    // Static
+    // Static data
     static private final Vec2 mobSize = Vec2.getInstance(30, 90);
     static private final Vec2 fwv = Vec2.getInstance(0, -2);
     // Difficulty & stable velocity
@@ -32,8 +32,7 @@ public final class Mob extends AbstractEntity {
     // Constructor
     public Mob(Vec2 pos, double veloAmp, double hpAmp, Player lka) {
         // Super
-        super(Type.Mob);
-        id = ++accumulator;
+        super(Type.Mob, accumulator++);
         rect = Rect.getInstance(pos, mobSize.mul(Utils.fitRange(1, hpAmp, 3)));
         health = (int)(hpAmp * 100);
         damping = 0.9;
@@ -96,7 +95,7 @@ public final class Mob extends AbstractEntity {
         // Add score for killer
         if (dead)
             return;
-        ((Bullet)obj).shotFrom.addScore((long)(100 * difficulty));
+        ((Bullet)obj).shotFrom.addScore((int)(100 * difficulty));
         dead = true;
         // Loot
         if (Math.random() < 0.02) {

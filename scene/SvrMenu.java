@@ -7,8 +7,9 @@ import network.*;
 import java.awt.*;
 
 public final class SvrMenu extends AbstractScene {
-    // Static 
+    // Static properties
     static private boolean connectFlag = false;
+    // Static data
     static private final MainMenu.MButton startGameB = 
         new MainMenu.MButton(
             Rect.getInstance(230, 480, 500, 40),
@@ -16,13 +17,13 @@ public final class SvrMenu extends AbstractScene {
             ()-> {
                 EntityPool.nowPlayer = EntityPool.p1;
                 Shared.server.send(Pack.getSST());
-                SceneManager.transition("Game");
+                SceneManager.transfer("Game");
             });
     static private final MainMenu.MButton backB = 
         new MainMenu.MButton(
             Rect.getInstance(230, 560, 500, 40),
             "Back",
-            ()->SceneManager.transition("CompMenu"));
+            ()->SceneManager.transfer("CompMenu"));
 
     // Override abstract methods
     @Override
@@ -56,9 +57,11 @@ public final class SvrMenu extends AbstractScene {
     }
     @Override
     public void draw(Graphics2D g2d) {
+        // Draw background
         WorldMap.drawMap(g2d);
         g2d.setColor(Shared.darkLayer);
         g2d.fillRect(0, 0, Application.size.intX(), Application.size.intY());
+        // Draw main
         Shared.titleA.draw(g2d);
         g2d.setColor(Color.WHITE);
         g2d.setFont(Shared.MSYH_B25);
@@ -67,6 +70,7 @@ public final class SvrMenu extends AbstractScene {
             g2d.drawString("Client connected from " + Shared.server.getRemoteAddress(), 250, 450);
         else 
             g2d.drawString("Waiting for connection...", 300, 450);
+        // Draw footer
         g2d.setFont(Shared.MSYH_B15);
         g2d.setColor(Color.WHITE);
         g2d.drawString("Made by Samunatsu Rainiar", 730, 710);

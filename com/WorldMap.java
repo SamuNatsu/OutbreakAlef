@@ -7,10 +7,11 @@ import java.awt.*;
 import javax.swing.*;
 
 public final class WorldMap {
+    // Static data
+    static private final Color borderColor = new Color(0x7F7F0000, true);
     // Map settings
     static public final Rect mapRect = Rect.getInstance(-1000, -750, 2000, 1500);
     static public final double miniMapScale = mapRect.size.x / 120;
-    static public final Color borderColor = new Color(0x7F7F0000, true);
     // Map texture
     static private Image mapT;
     // Parent component

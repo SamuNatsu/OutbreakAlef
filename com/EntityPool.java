@@ -8,19 +8,28 @@ import java.awt.*;
 import java.util.*;
 
 public final class EntityPool {
+    // Static data
+    static private final Vec2 warningPos = Vec2.getInstance(30, 360);
     // Managers
     static public final EntityManager bullet = new EntityManager();
     static public final EntityManager loot = new EntityManager();
     static public final EntityManager mob = new EntityManager();
     static public final EntityManager wall = new EntityManager();
     static public final ParticleManager particle = new ParticleManager();
-    // Player manage
-    static public final Player p1 = new Player(Shared.p1T, Shared.p1IT, Shared.p1S, Shared.p1IS), 
+    // Players
+    static public final Player 
+        p1 = new Player(Shared.p1T, Shared.p1IT, Shared.p1S, Shared.p1IS), 
         p2 = new Player(Shared.p2T, Shared.p2IT, Shared.p2S, Shared.p2IS);
     static public Player nowPlayer;
+    // Draw buffer
+    static private final PriorityQueue<AbstractEntity> buffer = new PriorityQueue<>(new Comparator<AbstractEntity>() {
+        public int compare(AbstractEntity a, AbstractEntity b) {
+            return a.rect.position.y < b.rect.position.y ? -1 : 1;
+        }
+    });
     // Boss generate posibility
-    static public double giantPercentage = 0.01, speedPercentage = 0.05;
-    static public long mobAcc = 0;
+    static private double giantPercentage = 0.01, speedPercentage = 0.05;
+    static private int mobAcc = 0;
 
     // Reset entity pools
     static public void reset() {
@@ -40,12 +49,10 @@ public final class EntityPool {
     }
     // Generate mob
     static private void addMob(Vec2 pos, double va, double ha) {
-        if (!Shared.enableNetwork) {
-            mob.add(new Mob(pos, va, ha, p1));
-            return;
-        }
-        boolean tmp = pos.distance(p1.rect.position) < pos.distance(p2.rect.position);
-        mob.add(new Mob(pos, va, ha, tmp ? p1 : p2));
+        mob.add(new Mob(
+            pos, va, ha, 
+            !Shared.enableNetwork || pos.distance(p1.rect.position) < pos.distance(p2.rect.position) ? p1 : p2
+        ));
     }
     static public void generateMob() {
         // Generate position
@@ -75,27 +82,28 @@ public final class EntityPool {
         // Generate mob
         if (Utils.random.nextDouble() < giantPercentage)
             addMob(tmp, 0.4, Utils.random(8, 13));
-        else {
-            if (Utils.random.nextDouble() < speedPercentage)
-                addMob(tmp, Utils.random(1.5, 2.5), 0.3);
-            else
-                addMob(tmp, 1, Utils.random(0.2, 0.4));
-        }
+        else if (Utils.random.nextDouble() < speedPercentage)
+            addMob(tmp, Utils.random(1.5, 2.5), 0.3);
+        else
+            addMob(tmp, 1, Utils.random(0.2, 0.4));
         // Mob count
         ++mobAcc;
         if (mobAcc > 50) {
             giantPercentage += 0.01;
-            speedPercentage += 0.01;
+            speedPercentage += 0.015;
+            giantPercentage = Math.min(giantPercentage, 0.05);
+            speedPercentage = Math.min(speedPercentage, 0.15);
             mobAcc = 0;
-            particle.add(new particle.FloatWord(Vec2.getInstance(30, 360), "More zombies are coming!", Color.RED));
+            particle.add(new particle.FloatWord(warningPos, "More zombies are coming!", Color.RED));
         }
     }
     // Move all entities
     static synchronized public void move(double time) {
+        // Entities move
         bullet.move(time);
         loot.move(time);
         mob.move(time);
-        // Player move
+        // Players move
         p1.onMove(time);
         if (Shared.enableNetwork)
             p2.onMove(time);
@@ -138,22 +146,26 @@ public final class EntityPool {
             obj.draw(g2d);
         });
         // Setup draw queue
-        PriorityQueue<AbstractEntity> queue = new PriorityQueue<>(new Comparator<AbstractEntity>() {
-            public int compare(AbstractEntity a, AbstractEntity b) {
-                return a.rect.position.y < b.rect.position.y ? -1 : 1;
-            }
-        });
-        bullet.output(queue);
-        mob.output(queue);
-        wall.output(queue);
-        queue.add(p1);
+        buffer.clear();
+        bullet.output(buffer);
+        mob.output(buffer);
+        wall.output(buffer);
+        buffer.add(p1);
         if (Shared.enableNetwork)
-            queue.add(p2);
+            buffer.add(p2);
         // Draw entities
-        while (!queue.isEmpty())
-            queue.poll().draw(g2d);
+        while (!buffer.isEmpty())
+            buffer.poll().draw(g2d);
         // Draw particles
         particle.draw(g2d);
+    }
+    static synchronized public void drawStable(Graphics2D g2d) {
+        // Setup draw queue
+        buffer.clear();
+        wall.output(buffer);
+        // Draw entities
+        while (!buffer.isEmpty())
+            buffer.poll().draw(g2d);
     }
     // Draw hitbox
     static public void drawHitbox(Graphics2D g2d) {
