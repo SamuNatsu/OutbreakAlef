@@ -1,4 +1,4 @@
 @echo off
 echo Running...
-java -Xss2m com/Application
+start javaw -jar OutbreakAlef.jar
 echo Done.

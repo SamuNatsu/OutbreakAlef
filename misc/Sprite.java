@@ -15,7 +15,7 @@ public final class Sprite {
 
     // Constructor
     public Sprite(String path) {
-        texture = new ImageIcon(path).getImage();
+        texture = new ImageIcon(Shared.jarPath(path)).getImage();
     }
     // Get texture
     public Image getTexture() {

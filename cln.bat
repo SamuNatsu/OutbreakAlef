@@ -1,4 +1,7 @@
 @echo off
-echo Deleting .class files...
-for /r %%s in (*.class) do del %%s
+echo Cleaning...
+cd build
+for /r %%s in (*.*) do del %%s
+cd ..
+if exist *.jar del *.jar
 echo Done.

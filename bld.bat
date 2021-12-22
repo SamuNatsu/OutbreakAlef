@@ -1,5 +1,7 @@
 @echo off
-call cln.bat
+if exist build call cln.bat
 echo Building....
-javac -encoding UTF-8 -Werror com/Application.java
+xcopy /S /I /Y assets build\assets
+javac -encoding UTF-8 -Werror -d .\build com/Application.java
+jar -cvfm OutbreakAlef.jar MANIFEST.MF -C .\build .
 echo Done.
