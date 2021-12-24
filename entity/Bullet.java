@@ -8,10 +8,11 @@ import particle.*;
 import java.awt.*;
 
 public final class Bullet extends AbstractEntity {
+    // Static data
+    static private Image bulletT = Utils.getImage("/assets/gun/bullet.png");
+    static private final Vec2 bulletSize = new Vec2(5, 5);
     // Entity ID accumulator
     static private long accumulator = 0;
-    // Static data
-    static private final Vec2 bulletSize = Vec2.getInstance(5, 5);
     // Source position
     public final Vec2 sourcePos;
     // Shoot from which player
@@ -23,7 +24,7 @@ public final class Bullet extends AbstractEntity {
     public Bullet(Vec2 pos, Vec2 v, int dmg, double rng, Player fr) {
         // Super
         super(Type.Bullet, accumulator++);
-        rect = Rect.getInstance(pos.add(v.resize(40)), bulletSize);
+        rect = new Rect(pos.add(v.resize(40)), bulletSize);
         damage = dmg;
         velocity = Utils.spreadDirection(v, Math.toRadians(-1.5), Math.toRadians(1.5));
         // This
@@ -37,7 +38,7 @@ public final class Bullet extends AbstractEntity {
     public Bullet(Vec2 pos, Vec2 v, int dmg, double rng, byte pl) {
         // Super
         super(Type.Bullet, accumulator++);
-        rect = Rect.getInstance(pos.add(v.resize(40)), bulletSize);
+        rect = new Rect(pos.add(v.resize(40)), bulletSize);
         damage = dmg;
         velocity = v.clone();
         // This
@@ -77,7 +78,7 @@ public final class Bullet extends AbstractEntity {
     public void draw(Graphics2D g2d) {
         Vec2 tmp = Camera.trans2LPos(rect.position);
         g2d.rotate(velocity.angle(), tmp.x, tmp.y);
-        g2d.drawImage(Shared.bulletT, tmp.intX() - 10, tmp.intY() - 10, 20, 20, null);
+        g2d.drawImage(bulletT, tmp.intX() - 10, tmp.intY() - 10, 20, 20, null);
         g2d.rotate(-velocity.angle(), tmp.x, tmp.y);
     }
 }

@@ -24,7 +24,7 @@ public final class FloatWord extends AbstractParticle {
         // This
         str = s;
         color = c;
-        velocity = Vec2.getInstance();
+        velocity = new Vec2();
         fnt = Shared.MSYH_B25;
     }
     public FloatWord(Vec2 pos, Vec2 v, String s, Color c) {

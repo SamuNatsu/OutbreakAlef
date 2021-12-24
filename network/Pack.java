@@ -139,8 +139,10 @@ public class Pack {
             switch (tp) {
                 case AR:
                     out.writeByte(0);
+                    break;
                 case SG:
                     out.writeByte(1);
+                    break;
                 case SMG:
                     out.writeByte(2);
             }

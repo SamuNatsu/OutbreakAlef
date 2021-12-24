@@ -1,24 +1,21 @@
 package auxiliary;
 
 public final class Rect implements Cloneable {
-    // Static factory base
-    static private final Rect base = new Rect();
     // Position & size
-    public Vec2 position = Vec2.getInstance(), size = Vec2.getInstance();
+    public Vec2 position, size;
 
     // Constructor
-    private Rect() {}
-    // Factories
-    static synchronized public Rect getInstance() {
-        return getInstance(0, 0, 0, 0);
+    public Rect() {
+        position = new Vec2();
+        size = new Vec2();
     }
-    static synchronized public Rect getInstance(Vec2 pos, Vec2 sz) {
-        base.set(pos, sz);
-        return base.clone();
+    public Rect(Vec2 pos, Vec2 sz) {
+        position = pos.clone();
+        size = sz.clone();
     }
-    static synchronized public Rect getInstance(double x, double y, double w, double h) {
-        base.set(x, y, w, h);
-        return base.clone();
+    public Rect(double x, double y, double w, double h) {
+        position = new Vec2(x, y);
+        size = new Vec2(w, h);
     }
     // Clone
     @Override
@@ -48,11 +45,12 @@ public final class Rect implements Cloneable {
     }
     // Check if rectangle contains point
     public boolean contains(Vec2 obj) {
-        return 
-            Utils.flq(position.x, obj.x) &&
-            Utils.flq(position.y, obj.y) &&
-            Utils.flq(obj.x, position.x + size.x) &&
-            Utils.flq(obj.y, position.y + size.y);
+        return !(
+            position.x > obj.x ||
+            position.x + size.x < obj.x ||
+            position.y > obj.y ||
+            position.y + size.y < obj.y
+        );
     }
     // Check if rectangle intersects with another rectangle
     public boolean intersects(Rect obj) {
@@ -60,7 +58,8 @@ public final class Rect implements Cloneable {
             position.x > obj.position.x + obj.size.x ||
             position.x + size.x < obj.position.x ||
             position.y > obj.position.y + obj.size.y ||
-            position.y + size.y < obj.position.y);
+            position.y + size.y < obj.position.y
+        );
     }
     // To string
     public String toString() {

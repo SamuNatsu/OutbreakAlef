@@ -9,7 +9,7 @@ import java.util.*;
 
 public final class EntityPool {
     // Static data
-    static private final Vec2 warningPos = Vec2.getInstance(30, 360);
+    static private final Vec2 warningPos = new Vec2(30, 360);
     // Managers
     static public final EntityManager bullet = new EntityManager();
     static public final EntityManager loot = new EntityManager();
@@ -18,13 +18,13 @@ public final class EntityPool {
     static public final ParticleManager particle = new ParticleManager();
     // Players
     static public final Player 
-        p1 = new Player(Shared.p1T, Shared.p1IT, Shared.p1S, Shared.p1IS), 
-        p2 = new Player(Shared.p2T, Shared.p2IT, Shared.p2S, Shared.p2IS);
+        p1 = new Player("1_stop", "1_stop_injured", "1_move", "1_move_injured"), 
+        p2 = new Player("2_stop", "2_stop_injured", "2_move", "2_move_injured");
     static public Player nowPlayer;
     // Draw buffer
     static private final PriorityQueue<AbstractEntity> buffer = new PriorityQueue<>(new Comparator<AbstractEntity>() {
         public int compare(AbstractEntity a, AbstractEntity b) {
-            return a.rect.position.y < b.rect.position.y ? -1 : 1;
+            return a.rect.position.y + a.rect.size.y / 2 < b.rect.position.y + b.rect.size.y / 2 ? -1 : 1;
         }
     });
     // Boss generate posibility
@@ -98,7 +98,7 @@ public final class EntityPool {
         }
     }
     // Move all entities
-    static synchronized public void move(double time) {
+    static public void move(double time) {
         // Entities move
         bullet.move(time);
         loot.move(time);
@@ -109,7 +109,7 @@ public final class EntityPool {
             p2.onMove(time);
     }
     // Collide all entities
-    static synchronized public void collide() {
+    static public void collide() {
         // Bullet collide -> Mob Wall
         bullet.collideWith(mob);
         bullet.collideWith(wall);
@@ -128,7 +128,7 @@ public final class EntityPool {
         }
     }
     // Maintain pools
-    static synchronized public void maintain() {
+    static public void maintain() {
         bullet.maintain();
         mob.maintain();
         loot.maintain();
@@ -140,16 +140,16 @@ public final class EntityPool {
         return bullet.summary() + loot.summary() + mob.summary() + wall.summary();
     }
     // Draw
-    static synchronized public void draw(Graphics2D g2d) {
+    static public void draw(Graphics2D g2d) {
         // Paint loot
         loot.forEach((Long id, AbstractEntity obj)-> {
             obj.draw(g2d);
         });
         // Setup draw queue
         buffer.clear();
-        bullet.output(buffer);
-        mob.output(buffer);
-        wall.output(buffer);
+        bullet.push(buffer);
+        mob.push(buffer);
+        wall.push(buffer);
         buffer.add(p1);
         if (Shared.enableNetwork)
             buffer.add(p2);
@@ -159,10 +159,10 @@ public final class EntityPool {
         // Draw particles
         particle.draw(g2d);
     }
-    static synchronized public void drawStable(Graphics2D g2d) {
+    static public void drawStable(Graphics2D g2d) {
         // Setup draw queue
         buffer.clear();
-        wall.output(buffer);
+        wall.push(buffer);
         // Draw entities
         while (!buffer.isEmpty())
             buffer.poll().draw(g2d);

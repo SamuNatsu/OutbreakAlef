@@ -31,7 +31,7 @@ public abstract class AbstractEntity {
     public int health = 100, damage = 0;
     // Physics properties
     public double invMass = 1, damping = 1, minVelo = 0, maxVelo = Double.MAX_VALUE;
-    public Vec2 velocity = Vec2.getInstance();
+    public Vec2 velocity = new Vec2();
 
     // Constructor
     public AbstractEntity(Type tp, long i) {

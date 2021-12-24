@@ -12,7 +12,7 @@ public class SvrClt {
     static public boolean next = true;                  // Next frame flag
     static public long frame = 0;                       // Frame number
     static public long lstUD = 0;                       // Last update time
-    static public final Vec2 rmp = Vec2.getInstance();  // Remote mouse position
+    static public final Vec2 rmp = new Vec2();          // Remote mouse position
     static public boolean rmd = false;                  // Remote mouse down
 
     static public void init() {
@@ -84,7 +84,7 @@ public class SvrClt {
                             double px = in.readDouble();
                             double py = in.readDouble();
                             (Shared.isSvr ? EntityPool.p2 : EntityPool.p1)
-                                .addImpulse(Vec2.getInstance(px, py));
+                                .addImpulse(new Vec2(px, py));
                             break;
                         }
                         case Pack.GMB:
@@ -100,8 +100,8 @@ public class SvrClt {
                             double rng = in.readDouble();
                             EntityPool.bullet.add(
                                 new Bullet(
-                                    Vec2.getInstance(px, py), 
-                                    Vec2.getInstance(vx, vy),
+                                    new Vec2(px, py), 
+                                    new Vec2(vx, vy),
                                     dmg, rng,
                                     (Shared.isSvr ? (byte)1 : (byte)0)));
                             break;
@@ -125,7 +125,7 @@ public class SvrClt {
                         case Pack.GHM: {
                             double px = in.readDouble();
                             double py = in.readDouble();
-                            EntityPool.loot.add(new HPMedic(Vec2.getInstance(px, py)));
+                            EntityPool.loot.add(new Medicine(new Vec2(px, py)));
                             break;
                         }
                         case Pack.SWG: {

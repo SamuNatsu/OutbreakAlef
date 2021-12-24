@@ -6,13 +6,13 @@ import network.*;
 
 import java.awt.*;
 
-public final class SvrMenu extends AbstractScene {
+public final class SvrMenu implements Scene {
     // Static properties
     static private boolean connectFlag = false;
     // Static data
     static private final MainMenu.MButton startGameB = 
         new MainMenu.MButton(
-            Rect.getInstance(230, 480, 500, 40),
+            new Rect(230, 480, 500, 40),
             "Start Game",
             ()-> {
                 EntityPool.nowPlayer = EntityPool.p1;
@@ -21,7 +21,7 @@ public final class SvrMenu extends AbstractScene {
             });
     static private final MainMenu.MButton backB = 
         new MainMenu.MButton(
-            Rect.getInstance(230, 560, 500, 40),
+            new Rect(230, 560, 500, 40),
             "Back",
             ()->SceneManager.transfer("CompMenu"));
 

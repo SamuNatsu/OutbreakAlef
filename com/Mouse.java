@@ -9,7 +9,7 @@ public final class Mouse extends MouseInputAdapter {
     // Instance
     static private Mouse instance = new Mouse();
     // Mouse state
-    static public final Vec2 position = Vec2.getInstance();
+    static public final Vec2 position = new Vec2();
     static public boolean down = false;
 
     // Get instance

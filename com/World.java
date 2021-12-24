@@ -9,11 +9,11 @@ import javax.swing.*;
 import javax.swing.plaf.*;
 
 public final class World extends JPanel implements Runnable {
-    // Self
-    static public World self;
     // Static data
     static private final int fps = 120;
     static private final long delayTime = (long)(1e9 / fps);
+    // Self reference
+    static public World self;
     // Loop system
     static public final double timeSlice = 100d / fps;
     static public long frameDelta = 0;
@@ -44,8 +44,6 @@ public final class World extends JPanel implements Runnable {
         });
         // Set focus
         setFocusable(true);
-        // Resource initialize
-        Shared.init();
         // Register scene
         SceneManager.add("Menu", new MainMenu());
         SceneManager.add("CompMenu", new CSMenu());
@@ -56,21 +54,19 @@ public final class World extends JPanel implements Runnable {
         SceneManager.transfer("Menu");
     }
     // Event handling
-    public synchronized void event() {
+    public void event() {
         SceneManager.event();
     }
     // Draw handling
-    public synchronized void draw(Graphics2D g2d) {
+    public void draw(Graphics2D g2d) {
         SceneManager.draw(g2d);
     }
     // Override abstract methods
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // Convert handle
-        Graphics2D g2d = (Graphics2D)g;
         // Draw
-        draw(g2d);
+        draw((Graphics2D)g);
     }
     @Override
     public void addNotify() {

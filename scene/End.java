@@ -7,11 +7,11 @@ import particle.*;
 
 import java.awt.*;
 
-public class End extends AbstractScene {
+public class End implements Scene {
     // Static data
     static private final MainMenu.MButton toMenuB = 
         new MainMenu.MButton(
-            Rect.getInstance(230, 560, 500, 40),
+            new Rect(230, 560, 500, 40),
             "Back to menu",
             ()->SceneManager.transfer("Menu"));
     static private Cloud cl;
@@ -72,13 +72,13 @@ public class End extends AbstractScene {
             if ((EntityPool.p1.score + EntityPool.p1.life * 10000) > (EntityPool.p2.score + EntityPool.p2.life * 10000)) {
                 g2d.drawString("P1 win!", 420, 500);
                 if (cl == null || cl.stop)
-                    cl = new Cloud(Vec2.getInstance(-300, 0), 5, 70);
+                    cl = new Cloud(new Vec2(-300, 0), 5, 70);
                 cl.draw(g2d);
             }
             else if ((EntityPool.p1.score + EntityPool.p1.life * 10000) < (EntityPool.p2.score + EntityPool.p2.life * 10000)) {
                 g2d.drawString("P2 win!", 420, 500);
                 if (cl == null || cl.stop)
-                    cl = new Cloud(Vec2.getInstance(300, 0), 5, 70);
+                    cl = new Cloud(new Vec2(300, 0), 5, 70);
                 cl.draw(g2d);
             }
             else 
@@ -94,7 +94,7 @@ public class End extends AbstractScene {
             g2d.setColor(Color.WHITE);
             g2d.drawString("Total score: " + (EntityPool.p1.score + EntityPool.p1.life * 10000), 300, 360);
             if (cl == null || cl.stop)
-                cl = new Cloud(Vec2.getInstance(-300, 0), 5, 70);
+                cl = new Cloud(new Vec2(-300, 0), 5, 70);
             cl.draw(g2d);
             EntityPool.p1.draw(g2d);
         }

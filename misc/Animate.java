@@ -18,7 +18,7 @@ public class Animate {
     // Constructor
     public Animate(Sprite sp, Vec2 pos, Vec2 sz, long fps) {
         sprite = sp;
-        rect = Rect.getInstance(pos, sz);
+        rect = new Rect(pos, sz);
         frameTime = (long)(1000d / fps);
     }
     // Set sprite
@@ -47,7 +47,7 @@ public class Animate {
         }
         // Paint
         Rect tmp = rect.clone();
-        tmp.position = Camera.trans2LPos(tmp.position);
+        tmp.position = Camera.trans2LPos(tmp.position.sub(rect.size.div(2)));
         if (flip) {
             tmp.position.x += tmp.size.x;
             tmp.size.x = -tmp.size.x;

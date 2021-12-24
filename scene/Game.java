@@ -2,13 +2,15 @@ package scene;
 
 import auxiliary.*;
 import com.*;
-import gadget.*;
+import misc.Medikit;
 import network.*;
 
 import java.awt.*;
 import java.awt.event.*;
 
-public final class Game extends AbstractScene {
+public final class Game implements Scene {
+    // Static data
+    static private final Image heartT = Utils.getImage("/assets/misc/heart.png");
     // Properties
     private long lstSum = 0;
 
@@ -39,8 +41,10 @@ public final class Game extends AbstractScene {
         // Frame accumulate
         ++SvrClt.frame;
         // Check game set
-        if (Shared.gameSet)
-            SceneManager.transfer("End");
+        if (Shared.gameSet) {
+            SceneManager.quickTransfer("End");
+            return;
+        }
         // Entity update
         EntityPool.move(World.timeSlice);
         EntityPool.collide();
@@ -67,7 +71,7 @@ public final class Game extends AbstractScene {
         // Player event
         EntityPool.nowPlayer.onEvent();
         // Gadgets event
-        MediKit.onEvent();
+        Medikit.onEvent();
         // Synchronize
         SvrClt.syncPack();
     }
@@ -84,11 +88,13 @@ public final class Game extends AbstractScene {
         // Draw debug info
         drawDebug(g2d);
     }
+    @Override
+    public void quit() {}
     // Reset world
     public void reset() {
         EntityPool.reset();
         WorldMap.reset();
-        MediKit.reset();
+        Medikit.reset();
         if (Shared.enableNetwork) {
             EntityPool.p1.rect.position.x = -20;
             EntityPool.p2.rect.position.x = 20;
@@ -119,9 +125,9 @@ public final class Game extends AbstractScene {
         }
         // Draw life
         for (int i = 0, j = Application.size.intX() - 140; i < EntityPool.nowPlayer.life; ++i, j += 40)
-            g2d.drawImage(Shared.heartT, j, 120, null);
+            g2d.drawImage(heartT, j, 120, null);
         // Draw gadgets
-        MediKit.draw(g2d);
+        Medikit.draw(g2d);
         // Draw footer
         g2d.setFont(Shared.MSYH_B15);
         g2d.setColor(Color.WHITE);

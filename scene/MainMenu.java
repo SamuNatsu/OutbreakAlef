@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public final class MainMenu extends AbstractScene {
+public final class MainMenu implements Scene {
     // Menu button define
     static public final class MButton extends JButton {
         // Callback function
@@ -27,7 +27,7 @@ public final class MainMenu extends AbstractScene {
     // Static data
     static private final MButton soloGameB = 
         new MButton(
-            Rect.getInstance(230, 400, 500, 40),
+            new Rect(230, 400, 500, 40),
             "Solo Mode",
             ()-> {
                 Shared.enableNetwork = false;
@@ -36,7 +36,7 @@ public final class MainMenu extends AbstractScene {
             });
     static private final MButton compGameB = 
         new MButton(
-            Rect.getInstance(230, 480, 500, 40),
+            new Rect(230, 480, 500, 40),
             "Competition Mode",
             ()-> {
                 Shared.enableNetwork = true;
@@ -44,7 +44,7 @@ public final class MainMenu extends AbstractScene {
             });
     static private final MButton exitB = 
         new MButton(
-            Rect.getInstance(230, 560, 500, 40),
+            new Rect(230, 560, 500, 40),
             "Quit",
             ()-> {
                 if (JOptionPane.showOptionDialog(
@@ -55,8 +55,8 @@ public final class MainMenu extends AbstractScene {
                     JOptionPane.QUESTION_MESSAGE,
                     null,
                     Shared.yesNoSelection,
-                    null) == 0)
-                    System.exit(0);
+                    null) == 0
+                ) System.exit(0);
             });
 
     // Override abstract methods

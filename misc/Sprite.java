@@ -3,6 +3,7 @@ package misc;
 import auxiliary.*;
 
 import java.awt.*;
+import java.net.*;
 import java.util.*;
 import javax.swing.*;
 
@@ -15,7 +16,10 @@ public final class Sprite {
 
     // Constructor
     public Sprite(String path) {
-        texture = new ImageIcon(Shared.jarPath(path)).getImage();
+        texture = new ImageIcon(path).getImage();
+    }
+    public Sprite(URL url) {
+        texture = new ImageIcon(url).getImage();
     }
     // Get texture
     public Image getTexture() {

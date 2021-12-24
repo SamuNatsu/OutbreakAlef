@@ -5,21 +5,21 @@ import com.*;
 
 import java.awt.*;
 
-public final class CSMenu extends AbstractScene {
+public final class CSMenu implements Scene {
     // Static data
     static private final MainMenu.MButton asServer = 
         new MainMenu.MButton(
-            Rect.getInstance(230, 400, 500, 40),
+            new Rect(230, 400, 500, 40),
             "Create a server",
             ()->SceneManager.transfer("SvrMenu"));
     static private final MainMenu.MButton asClient = 
         new MainMenu.MButton(
-            Rect.getInstance(230, 480, 500, 40),
+            new Rect(230, 480, 500, 40),
             "Connect to server",
             ()->SceneManager.transfer("CltMenu"));
     static private final MainMenu.MButton backB = 
         new MainMenu.MButton(
-            Rect.getInstance(230, 560, 500, 40),
+            new Rect(230, 560, 500, 40),
             "Back",
             ()->SceneManager.transfer("Menu"));
 

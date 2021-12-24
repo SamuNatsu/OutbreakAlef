@@ -1,15 +1,27 @@
 package auxiliary;
 
+import misc.*;
+
+import java.awt.*;
+import java.net.*;
 import java.util.*;
+import javax.swing.*;
 
 public final class Utils {
+    // Jar
+    static private Utils instance = new Utils();
+    static public URL getJarURL(String path) {
+        return instance.getClass().getResource(path);
+    }
+    static public Image getImage(String path) {
+        return new ImageIcon(getJarURL(path)).getImage();
+    }
+    static public Sprite getSprite(String path) {
+        return new Sprite(getJarURL(path));
+    }
     // Check a == b
     static public boolean feq(double a, double b) {
-        return Math.abs(a - b) < 1e-10;
-    }
-    // Check a <= b
-    static public boolean flq(double a, double b) {
-        return a < b || feq(a, b);
+        return Math.abs(a - b) < 1e-8;
     }
     // Fit a number in range [l, r]
     static public double fitRange(double l, double i, double r) {
@@ -38,6 +50,6 @@ public final class Utils {
     }
     static public Vec2 spreadPosition(Vec2 obj, double r) {
         double ang = Math.random() * 2 * Math.PI, len = Math.random() * r;
-        return obj.add(Vec2.getInstance(Math.cos(ang), Math.sin(ang)).resize(len));
+        return obj.add(new Vec2(len * Math.cos(ang), len * Math.sin(ang)));
     }
 }

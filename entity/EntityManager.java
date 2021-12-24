@@ -30,7 +30,7 @@ public final class EntityManager {
         delQueue.push(id);
     }
     // Push all entity references to drawing queue
-    public void output(PriorityQueue<AbstractEntity> obj) {
+    public void push(PriorityQueue<AbstractEntity> obj) {
         obj.addAll(pool.values());
     }
     // Move entities

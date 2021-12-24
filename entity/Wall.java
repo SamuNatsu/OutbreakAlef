@@ -7,19 +7,23 @@ import particle.*;
 import java.awt.*;
 
 public final class Wall extends AbstractEntity {
+    // Static data
+    static private final Image rock0T = Utils.getImage("/assets/map/rock_0.png");
+    static private final Image rock1T = Utils.getImage("/assets/map/rock_1.png");
+    static private final Image graveT = Utils.getImage("/assets/misc/grave.png");
     // Entity ID accumulator
     static private long accumulator = 0;
     // Static 
-    static private final Vec2 v1 = Vec2.getInstance(100, 100), v2 = Vec2.getInstance(50, 50), 
-        v3 = Vec2.getInstance(80, 80), v4 = Vec2.getInstance(50, 30), v5 = Vec2.getInstance(65, 50),
-        v6 = Vec2.getInstance(5, -5), v7 = Vec2.getInstance(0, -3), v8 = Vec2.getInstance(-2, -13), v9 = Vec2.getInstance(0, -30);
+    static private final Vec2 v1 = new Vec2(100, 100), v2 = new Vec2(50, 50), 
+        v3 = new Vec2(80, 80), v4 = new Vec2(50, 30), v5 = new Vec2(65, 50),
+        v6 = new Vec2(5, -5), v7 = new Vec2(0, -3), v8 = new Vec2(-2, -13), v9 = new Vec2(0, -30);
     // Type define
     static public enum WallType {
         // Item
-        RockA(Shared.rockAT, v1, v2, v6), 
-        RockB(Shared.rockBT, v1, v2, v7),
-        Box(Shared.boxS.getTexture(), v3, v5, v8),
-        Grave(Shared.graveT, v1, v4, v9);
+        RockA(rock0T, v1, v2, v6), 
+        RockB(rock1T, v1, v2, v7),
+        Box(BoxInjured.getTexture(), v3, v5, v8),
+        Grave(graveT, v1, v4, v9);
         // External texture
         public final Image texture;
         // Texture size, Hitbox size & draw offset
@@ -40,7 +44,7 @@ public final class Wall extends AbstractEntity {
     public Wall(Vec2 pos, int hp, WallType tp) {
         // Super
         super(Type.Wall, accumulator++);
-        rect = Rect.getInstance(pos, tp.sizeH);
+        rect = new Rect(pos, tp.sizeH);
         health = hp;
         // This
         wallType = tp;
@@ -59,7 +63,7 @@ public final class Wall extends AbstractEntity {
         }
         // Box injured animate
         if (wallType == WallType.Box)
-            EntityPool.particle.add(new BoxInjured(rect.position.add(wallType.offset).sub(wallType.sizeT.div(2))));
+            EntityPool.particle.add(new BoxInjured(rect.position.add(wallType.offset)));
     }
     @Override
     public void onDeath(AbstractEntity obj) {

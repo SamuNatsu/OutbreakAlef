@@ -10,11 +10,13 @@ import particle.*;
 import java.awt.*;
 
 public final class Mob extends AbstractEntity {
+    // Static data
+    static private final Sprite mobS = Utils.getSprite("/assets/misc/mob.png");
+    static private final Sprite mobIS = Utils.getSprite("/assets/misc/mob_injured.png");
+    static private final Vec2 mobSize = new Vec2(30, 90);
+    static private final Vec2 fwv = new Vec2(0, -2);
     // Entity ID accumulator
     static private long accumulator = 0;
-    // Static data
-    static private final Vec2 mobSize = Vec2.getInstance(30, 90);
-    static private final Vec2 fwv = Vec2.getInstance(0, -2);
     // Difficulty & stable velocity
     public final double difficulty, stableVelo;
     // Full HP
@@ -29,11 +31,18 @@ public final class Mob extends AbstractEntity {
     // Animate
     private final Animate ani;
 
+    // Static block
+    static {
+        mobS.addFrame(new Rect(0, 0, 64, 64));
+        mobS.addFrame(new Rect(0, 64, 64, 64));
+        mobIS.addFrame(new Rect(0, 0, 64, 64));
+        mobIS.addFrame(new Rect(0, 64, 64, 64));
+    }
     // Constructor
     public Mob(Vec2 pos, double veloAmp, double hpAmp, Player lka) {
         // Super
         super(Type.Mob, accumulator++);
-        rect = Rect.getInstance(pos, mobSize.mul(Utils.fitRange(1, hpAmp, 3)));
+        rect = new Rect(pos, mobSize.mul(Utils.fitRange(1, hpAmp, 3)));
         health = (int)(hpAmp * 100);
         damping = 0.9;
         invMass = 0.3 / Utils.fitRange(1, hpAmp, 6);
@@ -43,9 +52,9 @@ public final class Mob extends AbstractEntity {
         fullHP = health;
         target = lka;
         ani = new Animate(
-            Shared.mobS, 
+            null, 
             pos, 
-            Vec2.getInstance(128, 128).mul(Utils.fitRange(1, hpAmp, 3)), 
+            new Vec2(128, 128).mul(Utils.fitRange(1, hpAmp, 3)), 
             (long)(4 * veloAmp)
         );
         ani.loop = true;
@@ -88,7 +97,6 @@ public final class Mob extends AbstractEntity {
                 fwv,
                 Long.toString(-obj.damage), 
                 Color.RED));
-            // Todo: Damaged animation
     }
     @Override
     public void onDeath(AbstractEntity obj) {
@@ -102,7 +110,7 @@ public final class Mob extends AbstractEntity {
             if (Shared.enableNetwork && Shared.isSvr)
                 SvrClt.socket.send(Pack.getGHM(rect.position));
             if (!Shared.enableNetwork || Shared.isSvr)
-                EntityPool.loot.add(new HPMedic(rect.position));
+                EntityPool.loot.add(new Medicine(rect.position));
         }
         // Remove
         EntityPool.mob.remove(id);
@@ -126,12 +134,12 @@ public final class Mob extends AbstractEntity {
         if (velocity.length() < 1)
             velocity.reset();
         // Update image
-        ani.rect.position = rect.position.sub(ani.rect.size.div(2));
+        ani.rect.position = rect.position;
     }
     @Override
     public void draw(Graphics2D g2d) {
         // Draw mob
-        ani.setSprite(System.currentTimeMillis() - injure > 100 ? Shared.mobS : Shared.mobIS);
+        ani.setSprite(System.currentTimeMillis() - injure > 100 ? mobS : mobIS);
         ani.flip = rect.position.x > target.rect.position.x;
         ani.draw(g2d);
         // Draw HP bar

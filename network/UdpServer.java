@@ -13,7 +13,7 @@ public class UdpServer extends AbstractUdpSocket {
 
     // Get local port
     public int getLocalPort() {
-        return listener.getLocalPort();
+        return listener == null ? -1 : listener.getLocalPort();
     }
     // Reset
     public void reset() {

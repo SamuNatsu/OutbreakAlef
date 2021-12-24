@@ -16,7 +16,7 @@ final class MTextArea extends JTextArea {
     }
 }
 
-public final class CltMenu extends AbstractScene {
+public final class CltMenu implements Scene {
     // Static properties
     static private boolean start = false, connectFlag = false;
     static private String msg = "";
@@ -24,7 +24,7 @@ public final class CltMenu extends AbstractScene {
     static private final MTextArea ipT = new MTextArea();
     static private final MainMenu.MButton connB = 
         new MainMenu.MButton(
-            Rect.getInstance(230, 480, 500, 40),
+            new Rect(230, 480, 500, 40),
             "Connect",
             ()-> {
                 start = true;
@@ -42,7 +42,7 @@ public final class CltMenu extends AbstractScene {
             });
     static private final MainMenu.MButton backB = 
         new MainMenu.MButton(
-            Rect.getInstance(230, 560, 500, 40),
+            new Rect(230, 560, 500, 40),
             "Back",
             ()->SceneManager.transfer("CompMenu"));
 

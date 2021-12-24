@@ -8,9 +8,13 @@ import javax.swing.*;
 
 public final class WorldMap {
     // Static data
+    static private final Image grass0T = Utils.getImage("/assets/map/grass_0.png");
+    static private final Image grass1T = Utils.getImage("/assets/map/grass_1.png");
+    static private final Image grass2T = Utils.getImage("/assets/map/grass_2.png");
+    static private final Image grass3T = Utils.getImage("/assets/map/grass_3.png");
     static private final Color borderColor = new Color(0x7F7F0000, true);
     // Map settings
-    static public final Rect mapRect = Rect.getInstance(-1000, -750, 2000, 1500);
+    static public final Rect mapRect = new Rect(-1000, -750, 2000, 1500);
     static public final double miniMapScale = mapRect.size.x / 120;
     // Map texture
     static private Image mapT;
@@ -36,15 +40,15 @@ public final class WorldMap {
         for (int i = 0; i < tmp.intX(); i += 100)
             for (int j = 0; j < tmp.intY(); j += 100)
                 if (Utils.random.nextDouble() < 0.9)
-                    g2d.drawImage(Shared.grassAT, i, j, 100, 100, null);
+                    g2d.drawImage(grass0T, i, j, 100, 100, null);
                 else {
                     double rnd = Utils.random.nextDouble();
                     if (rnd < 0.03)
-                        g2d.drawImage(Shared.grassDT, i, j, 100, 100, null);
+                        g2d.drawImage(grass3T, i, j, 100, 100, null);
                     else if (rnd < 0.6)
-                        g2d.drawImage(Shared.grassBT, i, j, 100, 100, null);
+                        g2d.drawImage(grass1T, i, j, 100, 100, null);
                     else 
-                        g2d.drawImage(Shared.grassCT, i, j, 100, 100, null);
+                        g2d.drawImage(grass2T, i, j, 100, 100, null);
                 }
         // Draw boarder
         g2d.setColor(borderColor);

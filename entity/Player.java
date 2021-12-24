@@ -11,12 +11,15 @@ import java.awt.*;
 import java.awt.event.*;
 
 public final class Player extends AbstractEntity {
+    // Static data
+    static private final Image ART = Utils.getImage("/assets/gun/ar.png");
+    static private final Image SGT = Utils.getImage("/assets/gun/sg.png");
+    static private final Image SMGT = Utils.getImage("/assets/gun/smg.png");
+    static private final Color cureColor = new Color(0x007F00);
+    static private final Rect plSize = new Rect(0, 0, 30, 90);
+    static private final Vec2 cdGun = new Vec2(100, 140), fwv = new Vec2(0, -2);
     // Entity ID accumulator
     static private long accumulator = 0;
-    // Static
-    static private final Color cureColor = new Color(0x007F00);
-    static private final Rect plSize = Rect.getInstance(0, 0, 30, 90);
-    static private final Vec2 cdGun = Vec2.getInstance(100, 140), fwv = Vec2.getInstance(0, -2);
     // Gun type define
     static public enum Gun {AR, SG, SMG};
     // Gun type
@@ -36,7 +39,7 @@ public final class Player extends AbstractEntity {
     private final Animate ani;
 
     // Constructor
-    public Player(Image t1, Image t2, Sprite sp1, Sprite sp2) {
+    public Player(String t1, String t2, String sp1, String sp2) {
         // Super
         super(Type.Player, accumulator++);
         rect = plSize.clone();
@@ -44,11 +47,15 @@ public final class Player extends AbstractEntity {
         damping = 0.8;
         invMass = 0.4;
         // This
-        texture[0] = t1;
-        texture[1] = t2;
-        sprite[0] = sp1;
-        sprite[1] = sp2;
-        ani = new Animate(null, Vec2.getInstance(), Vec2.getInstance(128, 128), 8);
+        texture[0] = Utils.getImage("/assets/player/" + t1 + ".png");
+        texture[1] = Utils.getImage("/assets/player/" + t2 + ".png");
+        sprite[0] = Utils.getSprite("/assets/player/" + sp1 + ".png");
+        sprite[0].addFrame(new Rect(0, 0, 64, 64));
+        sprite[0].addFrame(new Rect(0, 64, 64, 64));
+        sprite[1] = Utils.getSprite("/assets/player/" + sp2 + ".png");
+        sprite[1].addFrame(new Rect(0, 0, 64, 64));
+        sprite[1].addFrame(new Rect(0, 64, 64, 64));
+        ani = new Animate(null, new Vec2(), new Vec2(128, 128), 8);
         ani.loop = true;
     }
     // Reset
@@ -166,7 +173,7 @@ public final class Player extends AbstractEntity {
     public void addImpulse(double x, double y) {
         // Network
         if (Shared.enableNetwork)
-            SvrClt.socket.send(Pack.getIMP(Vec2.getInstance(x, y)));
+            SvrClt.socket.send(Pack.getIMP(new Vec2(x, y)));
         // Modify velocity
         velocity = velocity.add(x * invMass, y * invMass);
         // Velocity limitate
@@ -250,7 +257,7 @@ public final class Player extends AbstractEntity {
         if (rect.position.y > WorldMap.mapRect.position.y + WorldMap.mapRect.size.y)
             rect.position.y = WorldMap.mapRect.position.y + WorldMap.mapRect.size.y;
         // Update state
-        ani.rect.position = rect.position.sub(ani.rect.size.div(2));
+        ani.rect.position = rect.position;
     }
     @Override
     public void draw(Graphics2D g2d) {
@@ -283,13 +290,13 @@ public final class Player extends AbstractEntity {
         Image gunImg;
         switch (gunType) {
             case AR:
-                gunImg = Shared.ART;
+                gunImg = ART;
                 break;
             case SG:
-                gunImg = Shared.SGT;
+                gunImg = SGT;
                 break;
             default:
-                gunImg = Shared.SMGT;
+                gunImg = SMGT;
         }
         g2d.rotate(ang, tmp.x, tmp.y);
         if (Math.abs(ang) <= Math.PI / 2.0)
