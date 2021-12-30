@@ -34,10 +34,10 @@ public final class CltMenu implements Scene {
                 try {
                     if (ls[0].compareTo("") == 0)
                         ls[0] = "localhost";
-                    Shared.client.connect(ls[0], Integer.parseInt(ls[1]));
+                    SvrClt.client.connect(ls[0], Integer.parseInt(ls[1]));
                 }
                 catch (Exception e) {
-                    Shared.client.setError("Invalid IP/port");
+                    SvrClt.client.setError("Invalid IP/port");
                 }
             });
     static private final MainMenu.MButton backB = 
@@ -72,18 +72,18 @@ public final class CltMenu implements Scene {
         if (start) {
             ipT.setEditable(false);
             connB.setEnabled(false);
-            if (Shared.client.isError()) {
-                msg = Shared.client.getError();
+            if (SvrClt.client.isError()) {
+                msg = SvrClt.client.getError();
                 start = false;
                 ipT.setEditable(true);
                 connB.setEnabled(true);
                 return;
             }
-            if (Shared.client.isConnected()) {
+            if (SvrClt.client.isConnected()) {
                 connectFlag = true;
                 msg = "Remote server connected, waiting for game start";
-                while (Shared.client.hasMessage())
-                    if (Shared.client.get()[0] == Pack.STT) {
+                while (SvrClt.client.hasMessage())
+                    if (SvrClt.client.get()[0] == Pack.STT) {
                         EntityPool.nowPlayer = EntityPool.p2;
                         SceneManager.transfer("Game");
                         return;

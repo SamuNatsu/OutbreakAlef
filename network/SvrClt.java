@@ -8,15 +8,22 @@ import scene.*;
 import java.io.*;
 
 public class SvrClt {
-    static public AbstractUdpSocket socket;             // Now socket
-    static public boolean next = true;                  // Next frame flag
-    static public long frame = 0;                       // Frame number
-    static public long lstUD = 0;                       // Last update time
-    static public final Vec2 rmp = new Vec2();          // Remote mouse position
-    static public boolean rmd = false;                  // Remote mouse down
+    // Socket
+    static public final UdpServer server = new UdpServer();
+    static public final UdpClient client = new UdpClient();
+    static public AbstractUdpSocket socket;
+    // Frame control
+    static public boolean next = true;
+    static public long frame = 0;
+    // Flow statistic
+    static private long lstUD = 0;
+    // Remote state
+    static public final Vec2 rmp = new Vec2();
+    static public boolean rmd = false;
 
+    // Initialize
     static public void init() {
-        socket = (Shared.isSvr ? Shared.server : Shared.client);
+        socket = (Shared.isSvr ? server : client);
         next = true;
         frame = 0;
         lstUD = System.currentTimeMillis();
@@ -24,17 +31,17 @@ public class SvrClt {
         rmd = false;
     }
     static public void syncRandom() {
-        if (Shared.enableNetwork) {
+        if (Shared.isMultiplayer) {
             if (Shared.isSvr) {
-                Shared.server.send(Pack.getRSD());
-                while (Shared.server.connected.get())
-                    if (Shared.server.hasMessage() && Shared.server.get()[0] == Pack.ACK)
+                server.send(Pack.getRSD());
+                while (server.connected.get())
+                    if (server.hasMessage() && server.get()[0] == Pack.ACK)
                         break;
             }
             else {
-                while (Shared.client.connected.get())
-                    if (Shared.client.hasMessage()) {
-                        byte[] buf = Shared.client.get();
+                while (client.connected.get())
+                    if (client.hasMessage()) {
+                        byte[] buf = client.get();
                         if (buf[0] != Pack.RSD)
                             continue;
                         DataInputStream in = new DataInputStream(new ByteArrayInputStream(buf));
@@ -45,29 +52,29 @@ public class SvrClt {
                         catch (Exception e) {
                             continue;
                         }
-                        Shared.client.send(Pack.getACK());
+                        client.send(Pack.getACK());
                         break;
                     }
             }
         }
     }
     static public boolean checkConnection() {
-        if (Shared.enableNetwork && !socket.isConnected()) {
-            Shared.netDiscon = true;
+        if (Shared.isMultiplayer && !socket.isConnected()) {
+            Shared.isNetIrrupt = true;
             SceneManager.transfer("Menu");
             return false;
         }
         return true;
     }
     static public void updateFlow() {
-        if (Shared.enableNetwork && System.currentTimeMillis() - lstUD > 1000) {
+        if (Shared.isMultiplayer && System.currentTimeMillis() - lstUD > 1000) {
             socket.resetUpload();
             socket.resetDownload();
             lstUD = System.currentTimeMillis();
         }
     }
     static public void syncGame() {
-        if (Shared.enableNetwork)
+        if (Shared.isMultiplayer)
             while (socket.hasMessage()) {
                 byte[] buf = socket.get();
                 DataInputStream in = new DataInputStream(new ByteArrayInputStream(buf));
@@ -75,7 +82,7 @@ public class SvrClt {
                     byte op = in.readByte();
                     switch (op) {
                         case Pack.STT:
-                            Shared.gameSet = true;
+                            Shared.isGameOver = true;
                             return;
                         case Pack.NXF:
                             next = true;
@@ -148,7 +155,7 @@ public class SvrClt {
             }
     }
     static public void syncPack() {
-        if (Shared.enableNetwork) {
+        if (Shared.isMultiplayer) {
             next = false;
             if (!Shared.isSvr)
                 socket.send(Pack.getACK());

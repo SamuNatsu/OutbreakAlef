@@ -107,9 +107,9 @@ public final class Mob extends AbstractEntity {
         dead = true;
         // Loot
         if (Math.random() < 0.02) {
-            if (Shared.enableNetwork && Shared.isSvr)
+            if (Shared.isMultiplayer && Shared.isSvr)
                 SvrClt.socket.send(Pack.getGHM(rect.position));
-            if (!Shared.enableNetwork || Shared.isSvr)
+            if (!Shared.isMultiplayer || Shared.isSvr)
                 EntityPool.loot.add(new Medicine(rect.position));
         }
         // Remove

@@ -2,6 +2,7 @@ package scene;
 
 import auxiliary.*;
 import com.*;
+import network.*;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -25,12 +26,14 @@ public final class MainMenu implements Scene {
         }
     }
     // Static data
+    static public final String[] okSelection = {"OK"};
+    static public final String[] yesNoSelection = {"Yes", "No"};
     static private final MButton soloGameB = 
         new MButton(
             new Rect(230, 400, 500, 40),
             "Solo Mode",
             ()-> {
-                Shared.enableNetwork = false;
+                Shared.isMultiplayer = false;
                 EntityPool.nowPlayer = EntityPool.p1;
                 SceneManager.transfer("Game");
             });
@@ -39,7 +42,7 @@ public final class MainMenu implements Scene {
             new Rect(230, 480, 500, 40),
             "Competition Mode",
             ()-> {
-                Shared.enableNetwork = true;
+                Shared.isMultiplayer = true;
                 SceneManager.transfer("CompMenu");
             });
     static private final MButton exitB = 
@@ -54,7 +57,7 @@ public final class MainMenu implements Scene {
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE,
                     null,
-                    Shared.yesNoSelection,
+                    yesNoSelection,
                     null) == 0
                 ) System.exit(0);
             });
@@ -63,7 +66,7 @@ public final class MainMenu implements Scene {
     @Override
     public void init() {
         // Error
-        if (Shared.netDiscon)
+        if (Shared.isNetIrrupt)
             new Thread(()-> {
                 JOptionPane.showOptionDialog(
                     Application.self,
@@ -72,13 +75,13 @@ public final class MainMenu implements Scene {
                     JOptionPane.OK_OPTION,
                     JOptionPane.ERROR_MESSAGE,
                     null,
-                    Shared.okSelection,
+                    okSelection,
                     null);
             }).start();
-        Shared.netDiscon = false;
+        Shared.isNetIrrupt = false;
         // Reset network
-        Shared.server.reset();
-        Shared.client.reset();
+        SvrClt.server.reset();
+        SvrClt.client.reset();
         // Add components
         World.self.add(soloGameB);
         World.self.add(compGameB);

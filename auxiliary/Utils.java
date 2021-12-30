@@ -10,7 +10,7 @@ import javax.swing.*;
 public final class Utils {
     // Jar
     static private Utils instance = new Utils();
-    static public URL getJarURL(String path) {
+    static private URL getJarURL(String path) {
         return instance.getClass().getResource(path);
     }
     static public Image getImage(String path) {

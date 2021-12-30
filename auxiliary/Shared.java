@@ -2,7 +2,6 @@ package auxiliary;
 
 import com.*;
 import misc.*;
-import network.*;
 
 import java.awt.*;
 import java.io.*;
@@ -30,13 +29,8 @@ public final class Shared {
     );
     // Color
     static public final Color darkLayer = new Color(0x5F000000, true);
-    // Selections
-    static public final String[] okSelection = {"OK"};
-    static public final String[] yesNoSelection = {"Yes", "No"};
     // Network
-    static public final UdpServer server = new UdpServer();
-    static public final UdpClient client = new UdpClient();
-    static public boolean enableNetwork = false, isSvr = false, netDiscon = false, gameSet = false;
+    static public boolean isMultiplayer = false, isSvr = false, isNetIrrupt = false, isGameOver = false;
     // Misc
     static public boolean debugMode = false;
 

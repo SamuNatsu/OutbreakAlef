@@ -77,7 +77,7 @@ public final class Player extends AbstractEntity {
         lastShootTime = System.currentTimeMillis() + 500l;
         EntityPool.particle.add(new CountDown(cdGun, 500, Color.RED));
         // Synchronize
-        if (Shared.enableNetwork)
+        if (Shared.isMultiplayer)
             SvrClt.socket.send(Pack.getSWG(tp));
     }
     public void switchGunN(byte b) {
@@ -122,7 +122,7 @@ public final class Player extends AbstractEntity {
     // Add score
     public void addScore(int sc) {
         // Network
-        if (Shared.enableNetwork && EntityPool.nowPlayer == this)
+        if (Shared.isMultiplayer && EntityPool.nowPlayer == this)
             SvrClt.socket.send(Pack.getASC(sc));
         // Add
         if (EntityPool.nowPlayer == this)
@@ -172,7 +172,7 @@ public final class Player extends AbstractEntity {
     @Override
     public void addImpulse(double x, double y) {
         // Network
-        if (Shared.enableNetwork)
+        if (Shared.isMultiplayer)
             SvrClt.socket.send(Pack.getIMP(new Vec2(x, y)));
         // Modify velocity
         velocity = velocity.add(x * invMass, y * invMass);
@@ -218,16 +218,16 @@ public final class Player extends AbstractEntity {
         // Update life
         --life;
         if (life == 0) 
-            Shared.gameSet = true;
+            Shared.isGameOver = true;
     }
     @Override
     public void onMove(double time) {
         move(time);
         moving = velocity.length() > 2;
         // Flip
-        if (Shared.enableNetwork && EntityPool.nowPlayer == this)
+        if (Shared.isMultiplayer && EntityPool.nowPlayer == this)
             SvrClt.socket.send(Pack.getMPS());
-        if (!Shared.enableNetwork || EntityPool.nowPlayer == this) {
+        if (!Shared.isMultiplayer || EntityPool.nowPlayer == this) {
             if (Mouse.down)
                 ani.flip = Camera.trans2GPos(Mouse.position).x < rect.position.x;
             else {
@@ -268,7 +268,7 @@ public final class Player extends AbstractEntity {
         }
         else {
             Image tx = System.currentTimeMillis() - injuring > 100 ? texture[0] : texture[1];
-            if (!Shared.enableNetwork || EntityPool.nowPlayer == this) {
+            if (!Shared.isMultiplayer || EntityPool.nowPlayer == this) {
                 if (Camera.trans2GPos(Mouse.position).x < rect.position.x)
                     g2d.drawImage(tx, tmp.intX() + 64, tmp.intY() - 70, -128, 128, null);
                 else
@@ -283,7 +283,7 @@ public final class Player extends AbstractEntity {
         }
         // Draw gun
         double ang = 0;
-        if (!Shared.enableNetwork || EntityPool.nowPlayer == this)
+        if (!Shared.isMultiplayer || EntityPool.nowPlayer == this)
             ang = Camera.trans2GPos(Mouse.position).sub(rect.position).angle();
         else
             ang = SvrClt.rmp.sub(rect.position).angle();

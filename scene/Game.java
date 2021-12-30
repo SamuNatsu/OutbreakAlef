@@ -23,7 +23,7 @@ public final class Game implements Scene {
         Utils.genSeed();
         Keyboard.reset();
         Mouse.reset();
-        Shared.gameSet = false;
+        Shared.isGameOver = false;
         // Synchronize
         SvrClt.init();
         SvrClt.syncRandom();
@@ -41,7 +41,7 @@ public final class Game implements Scene {
         // Frame accumulate
         ++SvrClt.frame;
         // Check game set
-        if (Shared.gameSet) {
+        if (Shared.isGameOver) {
             SceneManager.quickTransfer("End");
             return;
         }
@@ -52,10 +52,10 @@ public final class Game implements Scene {
         // Camera follow
         Camera.lookAtPlayer();
         // Summon mob
-        if (!Shared.enableNetwork || Shared.isSvr)
+        if (!Shared.isMultiplayer || Shared.isSvr)
             if (System.currentTimeMillis() - lstSum > 5000l) {
                 if (EntityPool.mob.summary() <= 50) {
-                    for (int i = 0, lmt = Shared.enableNetwork ? 10 : 5; i < lmt; ++i)
+                    for (int i = 0, lmt = Shared.isMultiplayer ? 10 : 5; i < lmt; ++i)
                         EntityPool.generateMob();
                     if (Shared.isSvr)
                         SvrClt.socket.send(Pack.getGMB());
@@ -64,8 +64,8 @@ public final class Game implements Scene {
             }
         // Escape
         if (Keyboard.isPressed(KeyEvent.VK_ESCAPE)) {
-            Shared.gameSet = true;
-            if (Shared.enableNetwork)
+            Shared.isGameOver = true;
+            if (Shared.isMultiplayer)
                 SvrClt.socket.send(Pack.getSST());
         }
         // Player event
@@ -95,7 +95,7 @@ public final class Game implements Scene {
         EntityPool.reset();
         WorldMap.reset();
         Medikit.reset();
-        if (Shared.enableNetwork) {
+        if (Shared.isMultiplayer) {
             EntityPool.p1.rect.position.x = -20;
             EntityPool.p2.rect.position.x = 20;
         }
@@ -116,7 +116,7 @@ public final class Game implements Scene {
         g2d.drawString("Score: " + EntityPool.nowPlayer.score, 30, 110);
         g2d.setColor(Color.BLACK);
         g2d.drawString(EntityPool.nowPlayer.gunType.toString(), 30, 140);
-        if (Shared.enableNetwork) {
+        if (Shared.isMultiplayer) {
             g2d.setColor(Color.BLUE);
             if (EntityPool.nowPlayer == EntityPool.p1)
                 g2d.drawString("Opponent: " + EntityPool.p2.score, 30, 170);
@@ -144,11 +144,11 @@ public final class Game implements Scene {
         g2d.drawString("Outbreak Alef - " + Shared.version, 10, 560);
         g2d.drawString("Built time: " + Shared.builtTime, 10, 580);
         g2d.drawString("E: " + EntityPool.summary() + " A: " + (EntityPool.summary() - EntityPool.wall.summary()), 10, 600);
-        g2d.drawString("Network: " + Shared.enableNetwork, 10, 620);
+        g2d.drawString("Network: " + Shared.isMultiplayer, 10, 620);
         g2d.drawString("Seed: " + Utils.getSeed(), 10, 640);
         g2d.drawString("FPS: " + World.rfps + " FP: " + World.frameDelta + "ms", 10, 660);
         g2d.drawString("FA: " + SvrClt.frame, 10, 680);
-        if (Shared.enableNetwork)
+        if (Shared.isMultiplayer)
             g2d.drawString("Up: " + SvrClt.socket.getUpload() + "B/s | Down: " + SvrClt.socket.getDownload() + "B/s", 10, 700);
     }
 }

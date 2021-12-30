@@ -51,7 +51,7 @@ public final class EntityPool {
     static private void addMob(Vec2 pos, double va, double ha) {
         mob.add(new Mob(
             pos, va, ha, 
-            !Shared.enableNetwork || pos.distance(p1.rect.position) < pos.distance(p2.rect.position) ? p1 : p2
+            !Shared.isMultiplayer || pos.distance(p1.rect.position) < pos.distance(p2.rect.position) ? p1 : p2
         ));
     }
     static public void generateMob() {
@@ -105,7 +105,7 @@ public final class EntityPool {
         mob.move(time);
         // Players move
         p1.onMove(time);
-        if (Shared.enableNetwork)
+        if (Shared.isMultiplayer)
             p2.onMove(time);
     }
     // Collide all entities
@@ -116,13 +116,13 @@ public final class EntityPool {
         // Mob collide -> Mob Player Wall
         mob.collideSelf();
         mob.collideWith(p1);
-        if (Shared.enableNetwork)
+        if (Shared.isMultiplayer)
             mob.collideWith(p2);
         mob.collideWith(wall);
         // Player collide -> Wall Loot
         wall.collideFrom(p1);
         loot.collideWith(p1);
-        if (Shared.enableNetwork) {
+        if (Shared.isMultiplayer) {
             wall.collideFrom(p2);
             loot.collideWith(p2);
         }
@@ -151,7 +151,7 @@ public final class EntityPool {
         mob.push(buffer);
         wall.push(buffer);
         buffer.add(p1);
-        if (Shared.enableNetwork)
+        if (Shared.isMultiplayer)
             buffer.add(p2);
         // Draw entities
         while (!buffer.isEmpty())
@@ -174,7 +174,7 @@ public final class EntityPool {
         mob.drawHitbox(g2d);
         wall.drawHitbox(g2d);
         p1.drawHitbox(g2d);
-        if (Shared.enableNetwork)
+        if (Shared.isMultiplayer)
             p2.drawHitbox(g2d);
     }
 }

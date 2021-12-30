@@ -129,7 +129,7 @@ public final class WorldMap {
         g2d.setColor(Color.WHITE);
         Vec2 t = EntityPool.p1.rect.position.sub(mapRect.position).div(miniMapScale).add(Application.size.x - 140, 20);
         g2d.fillRect(t.intX(), t.intY(), 2, 2);
-        if (Shared.enableNetwork) {
+        if (Shared.isMultiplayer) {
             t = EntityPool.p2.rect.position.sub(mapRect.position).div(miniMapScale).add(Application.size.x - 140, 20);
             g2d.fillRect(t.intX(), t.intY(), 2, 2);
         }

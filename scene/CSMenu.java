@@ -2,6 +2,7 @@ package scene;
 
 import auxiliary.*;
 import com.*;
+import network.*;
 
 import java.awt.*;
 
@@ -27,8 +28,8 @@ public final class CSMenu implements Scene {
     @Override
     public void init() {
         // Reset network
-        Shared.server.reset();
-        Shared.client.reset();
+        SvrClt.server.reset();
+        SvrClt.client.reset();
         // Add components
         World.self.add(asServer);
         World.self.add(asClient);

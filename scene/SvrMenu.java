@@ -16,7 +16,7 @@ public final class SvrMenu implements Scene {
             "Start Game",
             ()-> {
                 EntityPool.nowPlayer = EntityPool.p1;
-                Shared.server.send(Pack.getSST());
+                SvrClt.server.send(Pack.getSST());
                 SceneManager.transfer("Game");
             });
     static private final MainMenu.MButton backB = 
@@ -31,7 +31,7 @@ public final class SvrMenu implements Scene {
         // Start server
         connectFlag = false;
         Shared.isSvr = true;
-        Shared.server.start();
+        SvrClt.server.start();
         // Reset components
         startGameB.setEnabled(false);
         // Add components
@@ -44,14 +44,14 @@ public final class SvrMenu implements Scene {
     }
     @Override
     public void event() {
-        if (Shared.server.isConnected()) {
+        if (SvrClt.server.isConnected()) {
             if (!connectFlag)
                 startGameB.setEnabled(true);
             connectFlag = true;
         }
         else if (connectFlag) {
             connectFlag = false;
-            Shared.server.start();
+            SvrClt.server.start();
             startGameB.setEnabled(false);
         }
     }
@@ -65,9 +65,9 @@ public final class SvrMenu implements Scene {
         Shared.titleA.draw(g2d);
         g2d.setColor(Color.WHITE);
         g2d.setFont(Shared.MSYH_B25);
-        g2d.drawString("Server opens at port " + Shared.server.getLocalPort(), 300, 400);
-        if (Shared.server.isConnected())
-            g2d.drawString("Client connected from " + Shared.server.getRemoteAddress(), 250, 450);
+        g2d.drawString("Server opens at port " + SvrClt.server.getLocalPort(), 300, 400);
+        if (SvrClt.server.isConnected())
+            g2d.drawString("Client connected from " + SvrClt.server.getRemoteAddress(), 250, 450);
         else 
             g2d.drawString("Waiting for connection...", 300, 450);
         // Draw footer

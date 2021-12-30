@@ -58,7 +58,7 @@ public class End implements Scene {
         g2d.setFont(Shared.MSYH_B25);
         g2d.setColor(Color.WHITE);
         g2d.drawString("Game Over", 420, 200);
-        if (Shared.enableNetwork) {
+        if (Shared.isMultiplayer) {
             g2d.setColor(Color.ORANGE);
             g2d.drawString("P1 score: " + EntityPool.p1.score, 300, 300);
             g2d.drawString("P2 score: " + EntityPool.p2.score, 300, 330);

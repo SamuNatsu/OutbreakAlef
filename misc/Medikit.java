@@ -25,7 +25,7 @@ public final class Medikit {
     static public void onEvent() {
         if (Keyboard.isPressed(KeyEvent.VK_4) && available) {
             // Network
-            if (Shared.enableNetwork)
+            if (Shared.isMultiplayer)
                 SvrClt.socket.send(Pack.getCUR(30));
             // Cure player
             EntityPool.nowPlayer.cure(30);

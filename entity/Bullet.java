@@ -32,7 +32,7 @@ public final class Bullet extends AbstractEntity {
         shotFrom = fr;
         range = rng;
         // Synchronize
-        if (Shared.enableNetwork && EntityPool.nowPlayer == fr)
+        if (Shared.isMultiplayer && EntityPool.nowPlayer == fr)
             SvrClt.socket.send(Pack.getGBL(pos, velocity, dmg, rng));
     }
     public Bullet(Vec2 pos, Vec2 v, int dmg, double rng, byte pl) {
