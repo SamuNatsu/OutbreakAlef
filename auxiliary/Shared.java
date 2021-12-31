@@ -10,7 +10,7 @@ import java.util.*;
 
 public final class Shared {
     // Version
-    static public final String version = "v1.6.0";
+    static public final String version = "v1.5.0";
     static public final String builtTime = 
         new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(
             new Date(new File("OutbreakAlef.jar").lastModified())

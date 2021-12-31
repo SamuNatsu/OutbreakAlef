@@ -18,7 +18,7 @@ public final class Game implements Scene {
     @Override
     public void init() {
         // Reset
-        lstSum = 0;
+        lstSum = System.currentTimeMillis();
         reset();
         Utils.genSeed();
         Keyboard.reset();
@@ -52,15 +52,15 @@ public final class Game implements Scene {
         // Camera follow
         Camera.lookAtPlayer();
         // Summon mob
-        //if (!Shared.isMultiplayer || Shared.isSvr)
-            if (SvrClt.frame - lstSum > 600l) {
+        if (!Shared.isMultiplayer || Shared.isSvr)
+            if (System.currentTimeMillis() - lstSum > 5000l) {
                 if (EntityPool.mob.summary() <= 50) {
                     for (int i = 0, lmt = Shared.isMultiplayer ? 10 : 5; i < lmt; ++i)
                         EntityPool.generateMob();
-                    //if (Shared.isSvr)
-                    //    SvrClt.socket.send(Pack.getGMB());
+                    if (Shared.isSvr)
+                        SvrClt.socket.send(Pack.getGMB());
                 }
-                lstSum = SvrClt.frame;
+                lstSum = System.currentTimeMillis();
             }
         // Escape
         if (Keyboard.isPressed(KeyEvent.VK_ESCAPE)) {
